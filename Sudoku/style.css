@@ -1,0 +1,155 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.root-container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+}
+
+.root-container > * {
+    margin: 5px;
+}
+
+.tempReview {
+position: relative;
+    top: 10vh;
+}
+
+.root-body {
+    display: flex;
+}
+
+.root-body > * {
+    margin-left: 5px;
+}
+
+.game-header {
+    display: flex;
+    align-items: center;
+    height: 10vh;
+    width: 100%;
+    border-bottom: #bec6d4 1px solid;
+}
+
+.difficulty-section {
+    position: absolute;
+    left: 0;
+    top: 5%;
+}
+.sudokuBoard {
+    border: 3px solid #344861;
+    border-collapse: collapse;
+    width: 65vh;
+    height: 100%;
+    position: relative;
+    left: 0;
+ }
+.game-row {
+    display: flex;
+    position: relative;
+    width: 100%;
+}
+.game-cell {
+    display: flex;
+    height: 8vh;
+    width: 8vh;
+    color: #536479;
+    font-size: 5vh;
+    border-right: 1px solid #bec6d4;
+    border-bottom: 1px solid #bec6d4;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer
+}
+.cell-value {
+    color: #5a9cee;
+}
+
+.numpadBoard-container {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    min-height: 65vh;
+    min-width: 44vh;
+}
+.numpad {
+    display: flex;
+    position: relative;
+    flex-direction: column;
+    width: 37vh;
+    height: 55vh;
+}
+.numpadRow {
+    display: flex;
+    position: relative;
+    height: 100%;
+    border-right: 1px solid #bec6d4;
+}
+.numpadCell {
+    display: flex;
+    position: relative;
+    width: 100%;
+    color: #536479;
+    border-color: #bec6d4;
+    border-style: solid;
+    border-width: 1px 0 0 1px;
+    border-collapse: collapse;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 6.5vh;
+}
+
+
+
+
+
+.game-cell:nth-child(3n){
+    border-right: 2px solid #344861;
+}
+
+.game-row:nth-child(3n){
+    border-bottom: 2px solid #344861;
+}
+
+.numpadRow:nth-child(4n) {
+    border-bottom: 1px solid #bec6d4;;
+}
+
+.numpadCell:hover {
+    background-color: #baddfa;
+}
+
+.game-cell:hover {
+    background-color: #baddfa;
+}
+
+.sudokuPreview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 495px;
+    width: 495px;
+    background-color: grey;
+    border: 1px solid #bbbbbb;
+}
+
+.sign-up {
+    position: relative;
+    left: 50%;
+    right: 50%;
+}
+
+.sign-up > * {
+    margin: 3px;
+}
+
+.score {
+    position: absolute;
+    left: 97vh;
+    top: 5%;
+}
