@@ -2,8 +2,6 @@ import {GameView} from "./view/GameView.js";
 import {dataStore} from "./models/DataStore.js";
 import {DATA_TYPE, VIEW_TYPE} from "./core/constants/CONSTANTS.js";
 
-//todo: test branch
-
 window.onload = main;
 
 function main() {

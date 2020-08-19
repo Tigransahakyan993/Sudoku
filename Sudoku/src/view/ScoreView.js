@@ -64,5 +64,3 @@ export class ScoreView {
         }
     }
 }
-
-// export const score = new ScoreView()
