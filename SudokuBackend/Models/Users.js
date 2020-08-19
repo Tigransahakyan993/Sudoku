@@ -8,6 +8,7 @@ Users.init({
     username: {type: DataTypes.STRING, primaryKey: true, allowNull: false},
     password: {type: DataTypes.STRING, allowNull: false},
     tempGame: {type: DataTypes.STRING},
+    initialGame: {type: DataTypes.STRING},
     gameId : {type: DataTypes.INTEGER}
 }, {sequelize, modelName: 'users'})
 

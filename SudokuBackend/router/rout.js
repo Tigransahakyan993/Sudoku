@@ -10,7 +10,6 @@ const getDigits = require('../generateNumbers/generateSudokuNumbers');
 rout.use(cors());
 rout.use(express.json());
 
-
 rout.get('/', (req,res) => {
     let sql = 'SELECT * FROM sudoku.sudokus';
     db.query(sql,(err,result) => {
@@ -53,16 +52,16 @@ rout.get('/getUserGrid/:id/:difficulty/', (req,res) => {
                 order: [
                     Sequelize.fn( 'RAND')
                 ] })
-                .then(data => {
+                .then(game => {
+                    const userGrid = getGrids(JSON.parse(game.sudokuNumbers), req.params.difficulty);
                     Users.update({
-                        gameId: data.id
+                        gameId: game.id,
+                        initialGame: JSON.stringify(userGrid),
                     }, {
                         where : {
                             id: req.params.id
                         },
-
                     });
-                    const userGrid = getGrids(JSON.parse(data.sudokuNumbers), req.params.difficulty);
                     res.status(200).json(userGrid);
                 })
                 .catch(err => console.log(err))
@@ -76,9 +75,10 @@ rout.get('/getSavedGame/:id', (req, res) => {
     })
         .then(data => {
             if (!data.tempGame) {
-                res.redirect(`/getUserGrid/${req.params.id}/easy/`)
+                res.redirect(`/getUserGrid/${req.params.id}/easy/`);
             }
-            res.status(200).send(data.tempGame);
+            console.log('DATA',data);
+            res.status(200).send({tempGame:JSON.parse(data.tempGame), initialGame: JSON.parse(data.initialGame)});
         })
 })
 
@@ -86,7 +86,8 @@ rout.get('/getSavedGame/:id', (req, res) => {
 
 rout.put('/saveGame', (req,res) => {
     Users.update({
-        tempGame: JSON.stringify(req.body.game)
+        tempGame: JSON.stringify(req.body.tempGame),
+        initialGame: JSON.stringify(req.body.initialGame)
     },{
         where : {
             id: +req.body.id
@@ -96,17 +97,6 @@ rout.put('/saveGame', (req,res) => {
         .catch(err => res.status(200).json(err))
 })
 
-rout.post('/signUp', (req,res) => {
-    Users.create({
-        username: 'Tikk',
-        password: 'password',
-        gameId: req.body.id
-    })
-        .then(data => {
-            console.log('DATA',data);
-            res.status(200).json(data);
-        })
-})
 
 rout.listen(3000, () => {
     console.log('Server has been started on port 3000/...')

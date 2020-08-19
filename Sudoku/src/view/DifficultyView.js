@@ -1,9 +1,12 @@
-import model from "../model.js";
+import {NEW_GAME_SELECTED_EVENT} from "../core/constants/CONSTANTS.js";
+import Observable from "../models/Observable.js";
 
-class DifficultyView {
+export class DifficultyView {
     constructor() {
+        this.observable = new Observable();
         this.isExist = false;
-        this.render = this.render.bind(this)
+        this.dispatchDifficulty = this.dispatchDifficulty.bind(this);
+        this.render = this.render.bind(this);
     }
 
     render(){
@@ -15,7 +18,7 @@ class DifficultyView {
 
     create () {
     this.container = document.createElement('div');
-    this.container.classList.add('difficulty-section')
+    this.container.classList.add('difficulty-section');
     this.select = document.createElement('select');
     const difLabel = document.createElement('label');
     const easy = document.createElement('option');
@@ -40,8 +43,6 @@ class DifficultyView {
     }
 
     dispatchDifficulty(event) {
-        model.dispatch('newGame', event.target.value);
+        this.observable.dispatch(NEW_GAME_SELECTED_EVENT, event.target.value);
     }
 }
-
-export const difficulty = new DifficultyView();

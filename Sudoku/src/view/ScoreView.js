@@ -1,9 +1,9 @@
-class ScoreView {
+export class ScoreView {
     constructor() {
         this.isExist = false;
         this.start = false;
         this.time = [0,0];
-        this.render = this.render.bind(this)
+        this.render = this.render.bind(this);
         this.startStop = this.startStop.bind(this);
     }
 
@@ -65,4 +65,4 @@ class ScoreView {
     }
 }
 
-export const score = new ScoreView()
+// export const score = new ScoreView()

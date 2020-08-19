@@ -22,7 +22,7 @@ function resetNumbers(arr, percent) {
     for (let i = 0; i < percent; i++) {
         const randomIndex = Math.floor(Math.random() * 81);
         if (temp[randomIndex] > 0) {
-            temp[randomIndex] = '0';
+            temp[randomIndex] = 0;
         } else {
             i--;
         }

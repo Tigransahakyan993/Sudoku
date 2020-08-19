@@ -1,10 +1,16 @@
-import model from "../model.js";
+import Observable from "../models/Observable.js";
+import {NEW_GAME_SELECTED_EVENT, NUMPAD_SELECTED_EVENT} from "../core/constants/CONSTANTS.js";
 
 export class NumPadView {
 
     constructor() {
-    this.isExist = false;
+        this.observable = new Observable();
+        this.isExist = false;
         this.render = this.render.bind(this)
+        this.dispatchDigit = this.dispatchDigit.bind(this)
+        this.dispatchErase = this.dispatchErase.bind(this)
+        this.dispatchDigit = this.dispatchDigit.bind(this)
+        this.dispatchNewGame = this.dispatchNewGame.bind(this)
     }
 
     render() {
@@ -47,15 +53,17 @@ export class NumPadView {
     }
 
     dispatchDigit (e) {
-        model.dispatch('digit', e.target.innerText);
+        const number = e.target.innerText;
+        this.observable.dispatch(NUMPAD_SELECTED_EVENT, number);
     }
 
     dispatchNewGame() {
-        model.dispatch('newGame', null)
+        const difficulty = document.getElementById('difficultyId');
+        this.observable.dispatch(NEW_GAME_SELECTED_EVENT, difficulty.value);
     }
 
     dispatchErase() {
-        model.dispatch('erase', null)
+        this.observable.dispatch(NUMPAD_SELECTED_EVENT, null)
     }
 }
 

@@ -1,4 +1,4 @@
-import {service} from "../service/service.js";
+import {service} from "../../service/service.js";
 
 
   export const getUserGrid = async (difficulty = 'easy') => {
@@ -10,7 +10,7 @@ import {service} from "../service/service.js";
   export const gtePuzzleDigit = async (index) => {
       return await service(`getPuzzleDigit/${JSON.parse(localStorage.ticket).userId}/${index}`);
    };
-  export const saveUserGrid = async (game) => {
-        await service('saveGame', 'PUT', {game, id: JSON.parse(localStorage.ticket).userId})
+  export const saveCurrentGame = async (initialGame, tempGame) => {
+        await service('saveGame', 'PUT', {initialGame, tempGame, id: JSON.parse(localStorage.ticket).userId})
    };
 

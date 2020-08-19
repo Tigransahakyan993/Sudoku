@@ -1,6 +1,4 @@
-import {game} from "./Game.js";
-
-class Model {
+export default class Observable {
     constructor() {
         this.observers = [];
     }
@@ -19,14 +17,4 @@ class Model {
             obs.type === type ? obs.func(msg) : null;
         })
     }
-
 }
-
-const model = new Model();
-
-model.addObserver('index' ,game.setIndex);
-model.addObserver('digit', game.setDigit);
-model.addObserver('newGame', game.newGame);
-model.addObserver('erase', game.erase);
-
-export default model;

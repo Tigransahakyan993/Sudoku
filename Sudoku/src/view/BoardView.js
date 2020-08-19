@@ -1,10 +1,15 @@
-import model from "../model.js";
+import Observable from "../models/Observable.js";
+import {CELL_SELECTED_EVENT} from "../core/constants/CONSTANTS.js";
+import {dataStore} from "../models/DataStore.js";
 
-class BoardView {
+export class BoardView {
+
     constructor() {
-    this.isExist = false;
-    this.container = document.createElement('div');
-    this.setData = this.setData.bind(this);
+        this.observable = new Observable();
+        this.isExist = false;
+        this.container = document.createElement('div');
+        this.setData = this.setData.bind(this);
+        this.dispatchCellIndex = this.dispatchCellIndex.bind(this);
     }
 
     render() {
@@ -30,7 +35,9 @@ class BoardView {
                 cell.innerText = this.userGrid[index] > 0 ? this.userGrid[index] : '';
                 row.appendChild(cell);
                 cell.classList.add('game-cell');
-                typeof this.userGrid[index] === 'string' ? cell.classList.add('cell-value') : null;
+               if (this.userGrid[index] !== dataStore.initialGame[index]) {
+                   cell.classList.add('cell-value');
+               }
                 cell.setAttribute('id', `index_${index}`);
                     cell.addEventListener('click', this.dispatchCellIndex);
             }
@@ -45,16 +52,25 @@ class BoardView {
     }
 
     dispatchCellIndex(event) {
-      model.dispatch('index',(Array.from(event.target.parentElement.parentElement.children).indexOf(event.target.parentElement) * 9) + Array.from(event.target.parentElement.children).indexOf(event.target))
+        const i = Array.from(event.target.parentElement.parentElement.children).indexOf(event.target.parentElement) * 9;
+        const j = Array.from(event.target.parentElement.children).indexOf(event.target);
+        this.observable.dispatch(CELL_SELECTED_EVENT,i + j);
     }
 
     update() {
         const len = this.tableBody.children.length;
         for (let i = 0; i < len; i++) {
             for (let j = 0; j < len; j++) {
+                const index = i * len + j;
                 const cell = this.tableBody.children[i].children[j];
-                cell.innerText = this.userGrid[i * len + j] > 0 ? this.userGrid[i * len + j] : '';
-                typeof this.userGrid[i * len + j] === 'string' ? cell.classList.add('cell-value') : cell.classList.remove('cell-value');
+                cell.innerText = this.userGrid[index] > 0 ? this.userGrid[index] : '';
+                if (dataStore.initialGame[index] === 0) {
+                    if (!cell.classList.contains('cell-value')) {
+                        cell.classList.add('cell-value');
+                    }
+                    continue;
+                }
+                    cell.classList.remove('cell-value');
             }
         }
     }
@@ -65,4 +81,3 @@ class BoardView {
     }
 }
 
-export const board = new BoardView();
