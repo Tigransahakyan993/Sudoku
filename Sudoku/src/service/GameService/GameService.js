@@ -1,7 +1,7 @@
-import {service} from "../../service/service.js";
+import {service} from "../service.js";
 
 
-  export const getUserGrid = async (difficulty = 'easy') => {
+  export const getNewGame = async (difficulty = 'easy') => {
       return await service(`getUserGrid/${JSON.parse(localStorage.ticket).userId}/${difficulty}`, 'GET', null);
    };
   export const getSavedGame = async () => {

@@ -1,4 +1,4 @@
-import {dataStore} from "./DataStore.js";
+import {DataStore} from "./DataStore.js";
 
 export class Game {
 
@@ -8,6 +8,7 @@ export class Game {
         this.erase = this.erase.bind(this);
         this.newGame = this.newGame.bind(this);
         this.setIndex = this.setIndex.bind(this);
+        this.dataStore = new DataStore();
     }
 
     setDigit(digit) {
@@ -15,30 +16,30 @@ export class Game {
            throw Error('Invalid cell');
         }
 
-        if (!this.canSetDigitInArray(parseInt(digit), this.currentIndex, dataStore.tempGame)) {
+        if (!this.canSetDigitInArray(parseInt(digit), this.currentIndex, this.dataStore.tempGame)) {
             throw Error('Invalid digit');
         }
 
-        dataStore.setDigit(parseInt(digit), this.currentIndex);
-        if (!this.canContinueGame(dataStore.tempGame)) {
+        this.dataStore.setDigit(parseInt(digit), this.currentIndex);
+        if (!this.canContinueGame(this.dataStore.tempGame)) {
             alert('You win...!!!');
         }
-        dataStore.saveGame().then(() => console.log('game saved'));
+        this.dataStore.saveGame().then(() => console.log('game saved'));
     }
 
     erase() {
         if (this.currentIndex !== 0 && !this.currentIndex) {
             throw Error('Invalid cell');
         }
-        if (dataStore.initialGame[this.currentIndex] === dataStore.tempGame[this.currentIndex]) {
-            throw Error('Invalid digit');
+        if (this.dataStore.initialGame[this.currentIndex] === this.dataStore.tempGame[this.currentIndex]) {
+            throw Error('Can not erase digit, this digit is constant');
         }
-        dataStore.setDigit(0, this.currentIndex)
+        this.dataStore.setDigit(0, this.currentIndex);
     }
 
     async newGame(difficulty) {
-        const tempGame = await dataStore.getSudokuArray(difficulty);
-        await dataStore.saveGame();
+        const tempGame = await this.dataStore.getSudokuArray(difficulty);
+        await this.dataStore.saveGame();
         return tempGame;
     }
 
@@ -73,14 +74,14 @@ export class Game {
         let startIndex = ((row - (row % 3)) * 9) + (column - (column % 3));
 
         let matrixCellCount = 0;
-        let matrixLoop = 0
-        while(startIndex < arr.length && matrixLoop < 3){
+        let matrixLoop = 0;
+        while(startIndex < arr.length && matrixLoop < 3) {
             matrixCellCount++;
-            if (+arr[startIndex] === digit) {
+            if (arr[startIndex] === digit) {
                 return false;
             }
 
-            if (matrixCellCount === 3){
+            if (matrixCellCount === 3) {
                 matrixCellCount = 0;
                 matrixLoop++;
                 startIndex += 7;

@@ -1,5 +1,5 @@
 import Observable from "../models/Observable.js";
-import {NEW_GAME_SELECTED_EVENT, NUMPAD_SELECTED_EVENT} from "../core/constants/CONSTANTS.js";
+import {NEW_GAME_SELECTED_EVENT, NUMPAD_SELECTED_EVENT} from "../constants/CONSTANTS.js";
 
 export class NumPadView {
 

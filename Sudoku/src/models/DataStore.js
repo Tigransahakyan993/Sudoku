@@ -1,8 +1,8 @@
-import {getUserGrid} from "../core/GameService/GameService.js";
-import {saveCurrentGame} from "../core/GameService/GameService.js";
-import {getSavedGame} from "../core/GameService/GameService.js";
+import {getNewGame} from "../service/GameService/GameService.js";
+import {saveCurrentGame} from "../service/GameService/GameService.js";
+import {getSavedGame} from "../service/GameService/GameService.js";
 
-class DataStore {
+export class DataStore {
 
     constructor() {
     this.tempGame = [];
@@ -10,7 +10,7 @@ class DataStore {
     }
 
     async getSudokuArray(difficulty) {
-        this.initialGame = await getUserGrid(difficulty);
+        this.initialGame = await getNewGame(difficulty);
         this.tempGame = [...this.initialGame];
         return this.tempGame;
     }
@@ -20,12 +20,14 @@ class DataStore {
     }
 
    async getCurrentSavedGame() {
-        const games = await getSavedGame();
-       if (!games.tempGame) {
-           return games;
+        const game = await getSavedGame();
+       if (!game.tempGame) {
+           this.initialGame = game;
+           this.tempGame = [...this.initialGame];
+           return this.tempGame;
        }
-       this.initialGame = games.initialGame;
-        this.tempGame = games.tempGame;
+       this.initialGame = game.initialGame;
+        this.tempGame = game.tempGame;
         return this.tempGame;
     }
 
@@ -33,5 +35,3 @@ class DataStore {
         this.tempGame[index] = +digit;
     }
 }
-
-export const dataStore = new DataStore();

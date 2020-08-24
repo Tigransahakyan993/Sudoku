@@ -1,21 +1,17 @@
 import {Game} from "../models/Game.js";
-import {dataStore} from "../models/DataStore.js";
 import {BoardView} from "./BoardView.js";
 import {NumPadView} from "./NumPadView.js";
 import {DifficultyView} from "./DifficultyView.js";
 import {ScoreView} from "./ScoreView.js";
 import {
-    DATA_TYPE,
-    VIEW_TYPE,
     CELL_SELECTED_EVENT,
     NEW_GAME_SELECTED_EVENT,
     NUMPAD_SELECTED_EVENT,
-} from "../core/constants/CONSTANTS.js";
+} from "../constants/CONSTANTS.js";
 
 export class GameView {
 
     constructor () {
-        this.observers = [];
         this.selectedBoardIndex = null;
         this.boardView = new BoardView();
         this.numpad = new NumPadView();
@@ -32,51 +28,56 @@ export class GameView {
         this.difficultyView.observable.addObserver(NEW_GAME_SELECTED_EVENT, this.onDifficultySelected);
     }
 
+    async initialize() {
+        const data = await this.game.dataStore.getCurrentSavedGame();
+        this.boardView.setData(data);
+        this.setClassToBoard();
+        this.numpad.render();
+        this.scoreView.render();
+        this.difficultyView.render();
+    }
+
+    setClassToBoard() {
+        for (let i in this.game.dataStore.initialGame) {
+            const cell = document.getElementById(`index_${i}`);
+            if (this.game.dataStore.initialGame[+i] === 0) {
+                cell.classList.add('cell-value');
+                continue;
+            }
+            cell.classList.remove('cell-value');
+        }
+    }
+
     onNumpadNumberSelected(digit) {
         if (!digit) {
-            if (this.selectedBoardIndex) {
-                document.getElementById(`index_${this.selectedBoardIndex}`).innerText = '';
+            if (this.selectedBoardIndex >= 0) {
                 this.game.erase();
+                this.boardView.cellUpdate(this.selectedBoardIndex, '');
             }
             return;
         }
-        if (this.game.canSetDigitInArray(digit, this.selectedBoardIndex, dataStore.tempGame))
-        this.game.setDigit(digit);
-        if (!this.game.canContinueGame(dataStore.tempGame)) {
-            this.game.newGame(this.difficultyView.select.value)
-                .then(data => {
-                    this.notify(DATA_TYPE, data);
-                    this.notify(VIEW_TYPE, null)
-                })
+        if (this.game.canSetDigitInArray(digit, this.selectedBoardIndex, this.game.dataStore.tempGame)) {
+            this.game.setDigit(digit);
+            this.boardView.cellUpdate(this.selectedBoardIndex, digit)
+            if (!this.game.canContinueGame(this.game.dataStore.tempGame)) {
+                this.game.newGame(this.difficultyView.select.value)
+                    .then(data => {
+                        this.boardView.setData(data);
+                        this.scoreView.update();
+                    })
+            }
         }
-        this.notify(DATA_TYPE, dataStore.tempGame)
-    }
+        }
 
     onBoardIndexSelected(index) {
         this.selectedBoardIndex = index;
         this.game.setIndex(index);
     }
 
-    onDifficultySelected(difficulty) {
-        this.game.newGame(difficulty)
-            .then(sudokuArray => {
-                this.notify(DATA_TYPE, sudokuArray);
-                this.notify(VIEW_TYPE, null);
-            })
-    }
-
-    addObserver(type, func) {
-        this.observers.push({type, func});
-    }
-
-    removeObserver(obs) {
-        const index = this.observers.findIndex(obs);
-        this.observers.splice(index, 1);
-    }
-
-    notify(type, data) {
-        this.observers.forEach(obs => {
-            obs.type === type ? obs.func(data) : null;
-        })
+    async onDifficultySelected(difficulty) {
+        const data = await this.game.newGame(difficulty);
+                this.boardView.setData(data);
+                this.setClassToBoard();
+                this.scoreView.update();
     }
 }

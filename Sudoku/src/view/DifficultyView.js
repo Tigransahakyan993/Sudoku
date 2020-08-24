@@ -1,4 +1,4 @@
-import {NEW_GAME_SELECTED_EVENT} from "../core/constants/CONSTANTS.js";
+import {NEW_GAME_SELECTED_EVENT} from "../constants/CONSTANTS.js";
 import Observable from "../models/Observable.js";
 
 export class DifficultyView {
